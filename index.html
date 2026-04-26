@@ -309,6 +309,10 @@
     <div class="section-subtitle">Historical international match data — win rates, goal trends, and top nations</div>
     <div class="chart-grid">
       <div class="chart-card">
+        <div class="chart-card">
+  <h3><span class="dot"></span> Top 10 International Goalscorers</h3>
+  <canvas id="scorersChart"></canvas>
+</div>
         <h3><span class="dot"></span> Top 10 Nations by Wins</h3>
         <canvas id="winsChart"></canvas>
       </div>
@@ -438,7 +442,81 @@
         }
       }
     });
-  </script>
+ 
+<script>
+    // TOP 10 NATIONS BY WINS (Real Data)
+    new Chart(document.getElementById('winsChart'), {
+      type: 'bar',
+      data: {
+        labels: ["Brazil","England","Germany","Argentina","Sweden","South Korea","Mexico","France","Italy","Hungary"],
+        datasets: [{
+          label: 'Total Wins',
+          data: [670,623,597,588,541,536,511,476,475,470],
+          backgroundColor: 'rgba(0, 230, 118, 0.7)',
+          borderColor: '#00e676',
+          borderWidth: 1,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } },
+          y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }
+        }
+      }
+    });
 
+    // GOALS PER DECADE (Real Data)
+    new Chart(document.getElementById('goalsChart'), {
+      type: 'line',
+      data: {
+        labels: ["1870s","1880s","1890s","1900s","1910s","1920s","1930s","1940s","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"],
+        datasets: [{
+          label: 'Goals Scored',
+          data: [59,307,304,573,1392,3216,4660,3619,6611,10336,12295,12697,19297,26682,26659,15911],
+          borderColor: '#00e676',
+          backgroundColor: 'rgba(0,230,118,0.08)',
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: '#00e676',
+          pointRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } },
+          y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }
+        }
+      }
+    });
+
+    // TOP 10 SCORERS (Real Data - New Chart!)
+    new Chart(document.getElementById('scorersChart'), {
+      type: 'bar',
+      data: {
+        labels: ["Ronaldo","H. Kane","Lewandowski","Lukaku","Messi","Dzeko","Mitrovic","L. Suarez","Ali Daei","Klose"],
+        datasets: [{
+          label: 'International Goals',
+          data: [121,69,69,64,63,58,52,51,49,48],
+          backgroundColor: 'rgba(0, 230, 118, 0.7)',
+          borderColor: '#00e676',
+          borderWidth: 1,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } },
+          y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }
+        }
+      }
+    });
+</script>
 </body>
 </html>
