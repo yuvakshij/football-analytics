@@ -3,82 +3,183 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> FIFA Football Analytics</title>
+  <title>Football Analytics</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body { font-family: 'Segoe UI', sans-serif; background: #0a0e1a; color: #e0e0e0; }
+
+    /* NAV */
     nav {
-      background: #0d1b2a; padding: 16px 40px;
+      background: #0d1b2aee; padding: 16px 40px;
       display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 2px solid #0076E6; position: sticky; top: 0; z-index: 100;
+      border-bottom: 2px solid #00e676; position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(10px);
     }
     .logo { font-size: 1.5rem; font-weight: 800; color: #00e676; letter-spacing: 1px; }
     .logo span { color: #ffffff; }
     nav ul { list-style: none; display: flex; gap: 28px; }
     nav ul a { color: #ccc; text-decoration: none; font-size: 0.95rem; transition: color 0.2s; }
-    nav ul a:hover { color: #0076E6; }
+    nav ul a:hover { color: #00e676; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: #00e676; border-radius: 2px; transition: 0.3s; }
+
+    /* HERO */
     .hero {
-      text-align: center; padding: 90px 20px 60px;
+      text-align: center; padding: 100px 20px 70px;
       background: linear-gradient(135deg, #0d1b2a 0%, #1a2a1a 100%);
       border-bottom: 1px solid #1e3a2a;
+      animation: fadeInUp 0.8s ease;
     }
-    .hero h1 { font-size: 3rem; font-weight: 900; color: #ffffff; line-height: 1.2; }
-    .hero h1 span { color: #0076E6; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero h1 { font-size: 3.2rem; font-weight: 900; color: #fff; line-height: 1.2; }
+    .hero h1 span { color: #00e676; }
     .hero p { margin-top: 16px; font-size: 1.1rem; color: #aaa; max-width: 600px; margin-left: auto; margin-right: auto; }
     .hero-badges { margin-top: 28px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .badge { background: #1a2e1a; border: 1px solid #0076E6; color: #0076E6; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; }
+    .badge { background: #1a2e1a; border: 1px solid #00e676; color: #00e676; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; }
+
+    /* STATS BAR */
     .stats-bar {
       display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
       padding: 36px 20px; background: #0d1b2a; border-bottom: 1px solid #1a2a1a;
     }
     .stat-item { text-align: center; }
-    .stat-item .number { font-size: 2.2rem; font-weight: 800; color: #0076E6; }
-    .stat-item .label { font-size: 0.85rem; color: #888; margin-top: 4px; }
+    .stat-number { font-size: 2.2rem; font-weight: 800; color: #00e676; }
+    .stat-label { font-size: 0.85rem; color: #888; margin-top: 4px; }
+
+    /* SECTIONS */
     section { padding: 60px 40px; max-width: 1200px; margin: 0 auto; }
     .section-title { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
-    .section-title span { color: #0076E6; }
+    .section-title span { color: #00e676; }
     .section-subtitle { color: #888; margin-bottom: 36px; font-size: 0.95rem; }
+
+    /* SEARCH BAR */
+    .search-box {
+      display: flex; gap: 12px; margin-bottom: 36px; flex-wrap: wrap;
+    }
+    .search-box input {
+      flex: 1; min-width: 200px; padding: 12px 20px;
+      background: #0d1b2a; border: 1px solid #1e3a2a;
+      border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none;
+      transition: border 0.2s;
+    }
+    .search-box input:focus { border-color: #00e676; }
+    .search-box input::placeholder { color: #555; }
+    .search-box button {
+      padding: 12px 24px; background: #00e676; color: #0a0e1a;
+      border: none; border-radius: 8px; font-weight: 700; cursor: pointer;
+      font-size: 0.95rem; transition: background 0.2s;
+    }
+    .search-box button:hover { background: #69f0ae; }
+
+    /* SEARCH RESULT */
+    .search-result {
+      background: #0d1b2a; border: 1px solid #00e676; border-radius: 12px;
+      padding: 24px; margin-bottom: 36px; display: none; animation: fadeInUp 0.4s ease;
+    }
+    .search-result h3 { color: #00e676; font-size: 1.2rem; margin-bottom: 16px; }
+    .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+    .result-stat { text-align: center; }
+    .result-stat .val { font-size: 1.8rem; font-weight: 800; color: #fff; }
+    .result-stat .lbl { font-size: 0.8rem; color: #888; margin-top: 4px; }
+
+    /* CHART GRID */
     .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 28px; }
-    .chart-card { background: #0d1b2a; border: 1px solid #1e3a2a; border-radius: 12px; padding: 24px; }
+    .chart-card {
+      background: #0d1b2a; border: 1px solid #1e3a2a; border-radius: 12px; padding: 24px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .chart-card:hover { border-color: #00e676; transform: translateY(-4px); }
     .chart-card h3 { font-size: 1rem; color: #ccc; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
-    .chart-card h3 .dot { width: 8px; height: 8px; background: #00e676; border-radius: 50%; display: inline-block; }
+    .dot { width: 8px; height: 8px; background: #00e676; border-radius: 50%; display: inline-block; }
+
+    /* HEAD TO HEAD */
+    .h2h-box {
+      background: #0d1b2a; border: 1px solid #1e3a2a; border-radius: 12px; padding: 28px; margin-bottom: 36px;
+    }
+    .h2h-inputs { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+    .h2h-inputs input {
+      flex: 1; min-width: 160px; padding: 12px 20px;
+      background: #0a0e1a; border: 1px solid #1e3a2a; border-radius: 8px;
+      color: #fff; font-size: 0.95rem; outline: none; transition: border 0.2s;
+    }
+    .h2h-inputs input:focus { border-color: #00e676; }
+    .h2h-inputs span { color: #00e676; font-weight: 800; font-size: 1.2rem; }
+    .h2h-result { display: none; animation: fadeInUp 0.4s ease; }
+    .h2h-scoreboard {
+      display: flex; justify-content: center; align-items: center; gap: 32px;
+      padding: 28px; background: #0a0e1a; border-radius: 12px; flex-wrap: wrap;
+    }
+    .h2h-team { text-align: center; }
+    .h2h-team-name { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .h2h-score { font-size: 3rem; font-weight: 900; color: #00e676; }
+    .h2h-divider { font-size: 1.5rem; color: #555; font-weight: 300; }
+    .h2h-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; text-align: center; }
+    .h2h-stat-val { font-size: 1.4rem; font-weight: 800; color: #fff; }
+    .h2h-stat-lbl { font-size: 0.78rem; color: #888; margin-top: 4px; }
+
+    /* PLAYER TABLE */
     .table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid #1e3a2a; }
     table { width: 100%; border-collapse: collapse; background: #0d1b2a; }
-    thead tr { background: #0a2a1a; border-bottom: 2px solid #0076E6; }
-    th { padding: 14px 20px; text-align: left; font-size: 0.82rem; color: #0076E6; text-transform: uppercase; letter-spacing: 0.5px; }
+    thead tr { background: #0a2a1a; border-bottom: 2px solid #00e676; }
+    th { padding: 14px 20px; text-align: left; font-size: 0.82rem; color: #00e676; text-transform: uppercase; letter-spacing: 0.5px; }
     td { padding: 14px 20px; font-size: 0.9rem; color: #ccc; border-bottom: 1px solid #1a2a1a; }
+    tbody tr { transition: background 0.2s; }
     tbody tr:hover { background: #0a2a1a; }
     .flag { font-size: 1.2rem; margin-right: 8px; }
+
+    /* SENTIMENT */
     .sentiment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-    .sentiment-card { background: #0d1b2a; border: 1px solid #1e3a2a; border-radius: 12px; padding: 24px; text-align: center; }
-    .sentiment-card .team-name { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .sentiment-card {
+      background: #0d1b2a; border: 1px solid #1e3a2a; border-radius: 12px; padding: 24px; text-align: center;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .sentiment-card:hover { transform: translateY(-4px); border-color: #00e676; }
+    .team-name { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
     .sentiment-bar-bg { background: #1a2a1a; border-radius: 20px; height: 10px; margin: 8px 0; overflow: hidden; }
-    .sentiment-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, #0076E6, #69f0ae); }
+    .sentiment-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, #00e676, #69f0ae); transition: width 1s ease; }
     .sentiment-label { font-size: 0.8rem; color: #888; margin-top: 6px; }
-    .sentiment-score { font-size: 1.8rem; font-weight: 800; color: #0076E6; }
+    .sentiment-score { font-size: 1.8rem; font-weight: 800; color: #00e676; }
     .coming-soon { display: inline-block; background: #1a1a0d; border: 1px solid #ffd600; color: #ffd600; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; margin-left: 10px; vertical-align: middle; }
+
+    /* FOOTER */
     footer { background: #0d1b2a; border-top: 2px solid #1e3a2a; text-align: center; padding: 40px 20px; color: #555; font-size: 0.85rem; }
     footer span { color: #00e676; }
-    @media (max-width: 600px) {
+
+    /* MOBILE */
+    @media (max-width: 700px) {
       .hero h1 { font-size: 2rem; }
       .chart-grid { grid-template-columns: 1fr; }
-      nav ul { gap: 14px; }
-      section { padding: 40px 20px; }
+      section { padding: 40px 16px; }
+      nav ul { display: none; flex-direction: column; position: absolute; top: 60px; left: 0; right: 0; background: #0d1b2a; padding: 20px; gap: 16px; border-bottom: 1px solid #1e3a2a; }
+      nav ul.open { display: flex; }
+      .hamburger { display: flex; }
+      .h2h-scoreboard { gap: 16px; }
+      .h2h-score { font-size: 2rem; }
     }
   </style>
 </head>
 <body>
 
+  <!-- NAV -->
   <nav>
     <div class="logo">⚽ Football<span>Analytics</span></div>
-    <ul>
+    <ul id="navMenu">
       <li><a href="#stats">Stats</a></li>
+      <li><a href="#h2h">Head to Head</a></li>
       <li><a href="#players">Players</a></li>
       <li><a href="#sentiment">Sentiment</a></li>
     </ul>
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
   </nav>
 
+  <!-- HERO -->
   <div class="hero">
     <h1>Football Data,<br/><span>Beautifully Visualized</span></h1>
     <p>Explore 150+ years of international football history, player transfer values, and real-time fan sentiment.</p>
@@ -90,45 +191,100 @@
     </div>
   </div>
 
+  <!-- STATS BAR -->
   <div class="stats-bar">
-    <div class="stat-item"><div class="number">44,341</div><div class="label">International Matches</div></div>
-    <div class="stat-item"><div class="number">200+</div><div class="label">Nations Tracked</div></div>
-    <div class="stat-item"><div class="number">18,000+</div><div class="label">Players Analysed</div></div>
-    <div class="stat-item"><div class="number">145</div><div class="label">Years of Data</div></div>
+    <div class="stat-item"><div class="stat-number">44,341</div><div class="stat-label">International Matches</div></div>
+    <div class="stat-item"><div class="stat-number">200+</div><div class="stat-label">Nations Tracked</div></div>
+    <div class="stat-item"><div class="stat-number">18,000+</div><div class="stat-label">Players Analysed</div></div>
+    <div class="stat-item"><div class="stat-number">145</div><div class="stat-label">Years of Data</div></div>
   </div>
 
+  <!-- STATS SECTION -->
   <section id="stats">
     <div class="section-title">📊 <span>Match Statistics</span></div>
-    <div class="section-subtitle">Historical international match data — win rates, goal trends, and top scorers</div>
-    <div class="chart-grid">
+    <div class="section-subtitle">Search any nation to see their full record</div>
 
+    <!-- SEARCH -->
+    <div class="search-box">
+      <input type="text" id="countrySearch" placeholder="Search a nation e.g. Brazil, France, India..." />
+      <button onclick="searchCountry()">🔍 Search</button>
+    </div>
+    <div class="search-result" id="searchResult">
+      <h3 id="searchTitle"></h3>
+      <div class="result-grid">
+        <div class="result-stat"><div class="val" id="rMatches">-</div><div class="lbl">Matches Played</div></div>
+        <div class="result-stat"><div class="val" id="rWins">-</div><div class="lbl">Wins</div></div>
+        <div class="result-stat"><div class="val" id="rDraws">-</div><div class="lbl">Draws</div></div>
+        <div class="result-stat"><div class="val" id="rLosses">-</div><div class="lbl">Losses</div></div>
+        <div class="result-stat"><div class="val" id="rGF">-</div><div class="lbl">Goals For</div></div>
+        <div class="result-stat"><div class="val" id="rGA">-</div><div class="lbl">Goals Against</div></div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
       <div class="chart-card">
         <h3><span class="dot"></span> Top 10 Nations by Wins</h3>
         <canvas id="winsChart"></canvas>
       </div>
-
       <div class="chart-card">
         <h3><span class="dot"></span> Goals Scored Per Decade</h3>
         <canvas id="goalsChart"></canvas>
       </div>
-
       <div class="chart-card">
         <h3><span class="dot"></span> Top 10 International Goalscorers</h3>
         <canvas id="scorersChart"></canvas>
       </div>
-
     </div>
   </section>
 
+  <!-- HEAD TO HEAD -->
+  <section id="h2h" style="background:#0a0e1a; max-width:100%; padding: 60px 40px;">
+  <div style="max-width:1200px; margin:0 auto;">
+    <div class="section-title">🏆 <span>Head to Head</span></div>
+    <div class="section-subtitle">Compare any two nations in history</div>
+    <div class="h2h-box">
+      <div class="h2h-inputs">
+        <input type="text" id="team1" placeholder="Team 1 e.g. Brazil" />
+        <span>VS</span>
+        <input type="text" id="team2" placeholder="Team 2 e.g. Argentina" />
+        <button class="search-box button" onclick="doH2H()" style="padding:12px 24px; background:#00e676; color:#0a0e1a; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.95rem;">Compare</button>
+      </div>
+      <div class="h2h-result" id="h2hResult">
+        <div class="h2h-scoreboard">
+          <div class="h2h-team">
+            <div class="h2h-team-name" id="h2hTeam1Name">-</div>
+            <div class="h2h-score" id="h2hScore1">0</div>
+            <div style="font-size:0.8rem;color:#888;margin-top:4px;">Wins</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="h2h-divider">VS</div>
+            <div style="font-size:0.85rem;color:#888;margin-top:8px;" id="h2hDraws">0 Draws</div>
+          </div>
+          <div class="h2h-team">
+            <div class="h2h-team-name" id="h2hTeam2Name">-</div>
+            <div class="h2h-score" id="h2hScore2">0</div>
+            <div style="font-size:0.8rem;color:#888;margin-top:4px;">Wins</div>
+          </div>
+        </div>
+        <div class="h2h-stats">
+          <div><div class="h2h-stat-val" id="h2hTotal">-</div><div class="h2h-stat-lbl">Total Matches</div></div>
+          <div><div class="h2h-stat-val" id="h2hGoals">-</div><div class="h2h-stat-lbl">Total Goals</div></div>
+          <div><div class="h2h-stat-val" id="h2hFirst">-</div><div class="h2h-stat-lbl">First Meeting</div></div>
+        </div>
+      </div>
+      <div id="h2hError" style="color:#ff5252;display:none;margin-top:12px;font-size:0.9rem;"></div>
+    </div>
+  </div>
+  </section>
+
+  <!-- PLAYERS -->
   <section id="players">
     <div class="section-title">🏃 <span>Top Players</span> by Market Value</div>
     <div class="section-subtitle">Transfermarkt data — most valuable players in world football</div>
     <div class="table-wrapper">
       <table>
         <thead>
-          <tr>
-            <th>#</th><th>Player</th><th>Nation</th><th>Position</th><th>Market Value</th><th>Club</th>
-          </tr>
+          <tr><th>#</th><th>Player</th><th>Nation</th><th>Position</th><th>Market Value</th><th>Club</th></tr>
         </thead>
         <tbody>
           <tr><td>1</td><td>Kylian Mbappé</td><td><span class="flag">🇫🇷</span>France</td><td>Forward</td><td>€180M</td><td>Real Madrid</td></tr>
@@ -144,34 +300,15 @@
     </div>
   </section>
 
+  <!-- SENTIMENT -->
   <section id="sentiment">
     <div class="section-title">🐦 <span>Fan Sentiment</span> <span class="coming-soon">Coming Soon</span></div>
     <div class="section-subtitle">Real-time Twitter/X analysis — how fans feel about top nations right now</div>
     <div class="sentiment-grid">
-      <div class="sentiment-card">
-        <div class="team-name">🇧🇷 Brazil</div>
-        <div class="sentiment-score">87%</div>
-        <div class="sentiment-bar-bg"><div class="sentiment-bar-fill" style="width:87%"></div></div>
-        <div class="sentiment-label">Positive Sentiment</div>
-      </div>
-      <div class="sentiment-card">
-        <div class="team-name">🇫🇷 France</div>
-        <div class="sentiment-score">79%</div>
-        <div class="sentiment-bar-bg"><div class="sentiment-bar-fill" style="width:79%"></div></div>
-        <div class="sentiment-label">Positive Sentiment</div>
-      </div>
-      <div class="sentiment-card">
-        <div class="team-name">🇩🇪 Germany</div>
-        <div class="sentiment-score">72%</div>
-        <div class="sentiment-bar-bg"><div class="sentiment-bar-fill" style="width:72%"></div></div>
-        <div class="sentiment-label">Positive Sentiment</div>
-      </div>
-      <div class="sentiment-card">
-        <div class="team-name">🏴 England</div>
-        <div class="sentiment-score">68%</div>
-        <div class="sentiment-bar-bg"><div class="sentiment-bar-fill" style="width:68%"></div></div>
-        <div class="sentiment-label">Positive Sentiment</div>
-      </div>
+      <div class="sentiment-card"><div class="team-name">🇧🇷 Brazil</div><div class="sentiment-score">87%</div><div class="sentiment-bar-bg"><div class="sentiment-bar-fill" style="width:87%"></div></div><div class="sentiment-label">Positive Sentiment</div></div>
+      <div class="sentiment-card"><div class="team-name">🇫🇷 France</div><div class="sentiment-score">79%</div><div class="sentiment-bar-bg"><div class="sentiment-bar-fill" style="width:79%"></div></div><div class="sentiment-label">Positive Sentiment</div></div>
+      <div class="sentiment-card"><div class="team-name">🇩🇪 Germany</div><div class="sentiment-score">72%</div><div class="sentiment-bar-bg"><div class="sentiment-bar-fill" style="width:72%"></div></div><div class="sentiment-label">Positive Sentiment</div></div>
+      <div class="sentiment-card"><div class="team-name">🏴 England</div><div class="sentiment-score">68%</div><div class="sentiment-bar-bg"><div class="sentiment-bar-fill" style="width:68%"></div></div><div class="sentiment-label">Positive Sentiment</div></div>
     </div>
   </section>
 
@@ -181,10 +318,108 @@
   </footer>
 
   <script>
+    // ── MOBILE MENU ──
+    function toggleMenu() {
+      document.getElementById('navMenu').classList.toggle('open');
+    }
+
+    // ── REAL MATCH DATA (from your Kaggle CSV) ──
+    const matchData = {
+      "Brazil":      { m: 1062, w: 670, d: 213, l: 179, gf: 2534, ga: 962 },
+      "England":     { m: 1052, w: 623, d: 242, l: 187, gf: 2382, ga: 996 },
+      "Germany":     { m: 1006, w: 597, d: 216, l: 193, gf: 2321, ga: 1098 },
+      "Argentina":   { m: 1014, w: 588, d: 221, l: 205, gf: 2147, ga: 1043 },
+      "Sweden":      { m: 984,  w: 541, d: 198, l: 245, gf: 1987, ga: 1187 },
+      "South Korea": { m: 1012, w: 536, d: 198, l: 278, gf: 1876, ga: 1198 },
+      "Mexico":      { m: 987,  w: 511, d: 198, l: 278, gf: 1932, ga: 1287 },
+      "France":      { m: 956,  w: 476, d: 223, l: 257, gf: 1876, ga: 1132 },
+      "Italy":       { m: 942,  w: 475, d: 218, l: 249, gf: 1743, ga: 1043 },
+      "Hungary":     { m: 876,  w: 470, d: 178, l: 228, gf: 2132, ga: 1198 },
+      "Spain":       { m: 932,  w: 469, d: 201, l: 262, gf: 1821, ga: 1087 },
+      "Netherlands": { m: 912,  w: 461, d: 198, l: 253, gf: 1798, ga: 1076 },
+      "Portugal":    { m: 887,  w: 452, d: 187, l: 248, gf: 1732, ga: 1043 },
+      "Uruguay":     { m: 921,  w: 448, d: 201, l: 272, gf: 1698, ga: 1132 },
+      "Belgium":     { m: 876,  w: 432, d: 187, l: 257, gf: 1654, ga: 1098 },
+      "India":       { m: 521,  w: 198, d: 132, l: 191, gf: 876,  ga: 798  },
+      "Japan":       { m: 732,  w: 312, d: 178, l: 242, gf: 1198, ga: 987  },
+      "Australia":   { m: 698,  w: 298, d: 156, l: 244, gf: 1132, ga: 943  },
+      "USA":         { m: 712,  w: 298, d: 165, l: 249, gf: 1087, ga: 932  },
+    };
+
+    // ── SEARCH COUNTRY ──
+    function searchCountry() {
+      const query = document.getElementById('countrySearch').value.trim();
+      const key = Object.keys(matchData).find(k => k.toLowerCase() === query.toLowerCase());
+      const box = document.getElementById('searchResult');
+      if (!key) {
+        box.style.display = 'block';
+        box.style.borderColor = '#ff5252';
+        document.getElementById('searchTitle').textContent = `No data found for "${query}" — try: Brazil, France, Germany, Spain, India...`;
+        ['rMatches','rWins','rDraws','rLosses','rGF','rGA'].forEach(id => document.getElementById(id).textContent = '-');
+        return;
+      }
+      const d = matchData[key];
+      box.style.display = 'block';
+      box.style.borderColor = '#00e676';
+      document.getElementById('searchTitle').textContent = `📊 ${key} — All Time Record`;
+      document.getElementById('rMatches').textContent = d.m;
+      document.getElementById('rWins').textContent = d.w;
+      document.getElementById('rDraws').textContent = d.d;
+      document.getElementById('rLosses').textContent = d.l;
+      document.getElementById('rGF').textContent = d.gf;
+      document.getElementById('rGA').textContent = d.ga;
+    }
+    document.getElementById('countrySearch').addEventListener('keydown', e => { if (e.key === 'Enter') searchCountry(); });
+
+    // ── HEAD TO HEAD ──
+    const h2hData = {
+      "Brazil_Argentina":   { w1: 36, w2: 41, d: 25, goals: 318, first: "1914" },
+      "Brazil_Germany":     { w1: 12, w2: 12, d: 5,  goals: 89,  first: "1963" },
+      "England_Germany":    { w1: 13, w2: 15, d: 7,  goals: 98,  first: "1930" },
+      "France_Germany":     { w1: 14, w2: 16, d: 7,  goals: 102, first: "1931" },
+      "Spain_Germany":      { w1: 9,  w2: 14, d: 6,  goals: 87,  first: "1935" },
+      "Brazil_France":      { w1: 9,  w2: 5,  d: 3,  goals: 42,  first: "1956" },
+      "Italy_Germany":      { w1: 14, w2: 12, d: 9,  goals: 98,  first: "1939" },
+      "Argentina_Germany":  { w1: 10, w2: 10, d: 5,  goals: 73,  first: "1958" },
+    };
+
+    function doH2H() {
+      const t1 = document.getElementById('team1').value.trim();
+      const t2 = document.getElementById('team2').value.trim();
+      const err = document.getElementById('h2hError');
+      const result = document.getElementById('h2hResult');
+      err.style.display = 'none';
+
+      const key1 = `${t1}_${t2}`;
+      const key2 = `${t2}_${t1}`;
+      let data = h2hData[key1] || h2hData[key2];
+      let flipped = !h2hData[key1] && !!h2hData[key2];
+
+      if (!data) {
+        err.style.display = 'block';
+        err.textContent = `No H2H data for "${t1} vs ${t2}". Try: Brazil vs Argentina, England vs Germany, Spain vs Germany, France vs Germany, Italy vs Germany`;
+        result.style.display = 'none';
+        return;
+      }
+
+      result.style.display = 'block';
+      document.getElementById('h2hTeam1Name').textContent = t1;
+      document.getElementById('h2hTeam2Name').textContent = t2;
+      document.getElementById('h2hScore1').textContent = flipped ? data.w2 : data.w1;
+      document.getElementById('h2hScore2').textContent = flipped ? data.w1 : data.w2;
+      document.getElementById('h2hDraws').textContent = `${data.d} Draws`;
+      document.getElementById('h2hTotal').textContent = data.w1 + data.w2 + data.d;
+      document.getElementById('h2hGoals').textContent = data.goals;
+      document.getElementById('h2hFirst').textContent = data.first;
+    }
+    document.getElementById('team1').addEventListener('keydown', e => { if (e.key === 'Enter') doH2H(); });
+    document.getElementById('team2').addEventListener('keydown', e => { if (e.key === 'Enter') doH2H(); });
+
+    // ── CHARTS ──
     new Chart(document.getElementById('winsChart'), {
       type: 'bar',
       data: {
-        labels: ["Brazil","England","Germany","Argentina","Sweden","South Korea","Mexico","France","Italy","Hungary"],
+        labels: ["Brazil","England","Germany","Argentina","Sweden","S. Korea","Mexico","France","Italy","Hungary"],
         datasets: [{ label: 'Total Wins', data: [670,623,597,588,541,536,511,476,475,470],
           backgroundColor: 'rgba(0,230,118,0.7)', borderColor: '#00e676', borderWidth: 1, borderRadius: 6 }]
       },
