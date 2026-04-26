@@ -3,254 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Football Analytics</title>
+  <title> FIFA Football Analytics</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #0a0e1a;
-      color: #e0e0e0;
-    }
-
-    /* NAV */
+    body { font-family: 'Segoe UI', sans-serif; background: #0a0e1a; color: #e0e0e0; }
     nav {
-      background: #0d1b2a;
-      padding: 16px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #00e676;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: #0d1b2a; padding: 16px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px solid #00e676; position: sticky; top: 0; z-index: 100;
     }
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #00e676;
-      letter-spacing: 1px;
-    }
+    .logo { font-size: 1.5rem; font-weight: 800; color: #00e676; letter-spacing: 1px; }
     .logo span { color: #ffffff; }
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 28px;
-    }
-    nav ul a {
-      color: #ccc;
-      text-decoration: none;
-      font-size: 0.95rem;
-      transition: color 0.2s;
-    }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav ul a { color: #ccc; text-decoration: none; font-size: 0.95rem; transition: color 0.2s; }
     nav ul a:hover { color: #00e676; }
-
-    /* HERO */
     .hero {
-      text-align: center;
-      padding: 90px 20px 60px;
+      text-align: center; padding: 90px 20px 60px;
       background: linear-gradient(135deg, #0d1b2a 0%, #1a2a1a 100%);
       border-bottom: 1px solid #1e3a2a;
     }
-    .hero h1 {
-      font-size: 3rem;
-      font-weight: 900;
-      color: #ffffff;
-      line-height: 1.2;
-    }
+    .hero h1 { font-size: 3rem; font-weight: 900; color: #ffffff; line-height: 1.2; }
     .hero h1 span { color: #00e676; }
-    .hero p {
-      margin-top: 16px;
-      font-size: 1.1rem;
-      color: #aaa;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .hero-badges {
-      margin-top: 28px;
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .badge {
-      background: #1a2e1a;
-      border: 1px solid #00e676;
-      color: #00e676;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-    }
-
-    /* STATS BAR */
+    .hero p { margin-top: 16px; font-size: 1.1rem; color: #aaa; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .hero-badges { margin-top: 28px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .badge { background: #1a2e1a; border: 1px solid #00e676; color: #00e676; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; }
     .stats-bar {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      padding: 36px 20px;
-      background: #0d1b2a;
-      border-bottom: 1px solid #1a2a1a;
+      display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+      padding: 36px 20px; background: #0d1b2a; border-bottom: 1px solid #1a2a1a;
     }
     .stat-item { text-align: center; }
-    .stat-item .number {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: #00e676;
-    }
-    .stat-item .label {
-      font-size: 0.85rem;
-      color: #888;
-      margin-top: 4px;
-    }
-
-    /* SECTIONS */
-    section {
-      padding: 60px 40px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .section-title {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 8px;
-    }
+    .stat-item .number { font-size: 2.2rem; font-weight: 800; color: #00e676; }
+    .stat-item .label { font-size: 0.85rem; color: #888; margin-top: 4px; }
+    section { padding: 60px 40px; max-width: 1200px; margin: 0 auto; }
+    .section-title { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
     .section-title span { color: #00e676; }
-    .section-subtitle {
-      color: #888;
-      margin-bottom: 36px;
-      font-size: 0.95rem;
-    }
-
-    /* CHART GRID */
-    .chart-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-      gap: 28px;
-    }
-    .chart-card {
-      background: #0d1b2a;
-      border: 1px solid #1e3a2a;
-      border-radius: 12px;
-      padding: 24px;
-    }
-    .chart-card h3 {
-      font-size: 1rem;
-      color: #ccc;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .chart-card h3 .dot {
-      width: 8px; height: 8px;
-      background: #00e676;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    /* PLAYER TABLE */
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid #1e3a2a;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #0d1b2a;
-    }
-    thead tr {
-      background: #0a2a1a;
-      border-bottom: 2px solid #00e676;
-    }
-    th {
-      padding: 14px 20px;
-      text-align: left;
-      font-size: 0.82rem;
-      color: #00e676;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    td {
-      padding: 14px 20px;
-      font-size: 0.9rem;
-      color: #ccc;
-      border-bottom: 1px solid #1a2a1a;
-    }
+    .section-subtitle { color: #888; margin-bottom: 36px; font-size: 0.95rem; }
+    .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 28px; }
+    .chart-card { background: #0d1b2a; border: 1px solid #1e3a2a; border-radius: 12px; padding: 24px; }
+    .chart-card h3 { font-size: 1rem; color: #ccc; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .chart-card h3 .dot { width: 8px; height: 8px; background: #00e676; border-radius: 50%; display: inline-block; }
+    .table-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid #1e3a2a; }
+    table { width: 100%; border-collapse: collapse; background: #0d1b2a; }
+    thead tr { background: #0a2a1a; border-bottom: 2px solid #00e676; }
+    th { padding: 14px 20px; text-align: left; font-size: 0.82rem; color: #00e676; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 14px 20px; font-size: 0.9rem; color: #ccc; border-bottom: 1px solid #1a2a1a; }
     tbody tr:hover { background: #0a2a1a; }
     .flag { font-size: 1.2rem; margin-right: 8px; }
-
-    /* SENTIMENT SECTION */
-    .sentiment-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-    .sentiment-card {
-      background: #0d1b2a;
-      border: 1px solid #1e3a2a;
-      border-radius: 12px;
-      padding: 24px;
-      text-align: center;
-    }
-    .sentiment-card .team-name {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 12px;
-    }
-    .sentiment-bar-bg {
-      background: #1a2a1a;
-      border-radius: 20px;
-      height: 10px;
-      margin: 8px 0;
-      overflow: hidden;
-    }
-    .sentiment-bar-fill {
-      height: 100%;
-      border-radius: 20px;
-      background: linear-gradient(90deg, #00e676, #69f0ae);
-    }
-    .sentiment-label {
-      font-size: 0.8rem;
-      color: #888;
-      margin-top: 6px;
-    }
-    .sentiment-score {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #00e676;
-    }
-
-    /* COMING SOON BADGE */
-    .coming-soon {
-      display: inline-block;
-      background: #1a1a0d;
-      border: 1px solid #ffd600;
-      color: #ffd600;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      margin-left: 10px;
-      vertical-align: middle;
-    }
-
-    /* FOOTER */
-    footer {
-      background: #0d1b2a;
-      border-top: 2px solid #1e3a2a;
-      text-align: center;
-      padding: 40px 20px;
-      color: #555;
-      font-size: 0.85rem;
-    }
+    .sentiment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .sentiment-card { background: #0d1b2a; border: 1px solid #1e3a2a; border-radius: 12px; padding: 24px; text-align: center; }
+    .sentiment-card .team-name { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .sentiment-bar-bg { background: #1a2a1a; border-radius: 20px; height: 10px; margin: 8px 0; overflow: hidden; }
+    .sentiment-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, #00e676, #69f0ae); }
+    .sentiment-label { font-size: 0.8rem; color: #888; margin-top: 6px; }
+    .sentiment-score { font-size: 1.8rem; font-weight: 800; color: #00e676; }
+    .coming-soon { display: inline-block; background: #1a1a0d; border: 1px solid #ffd600; color: #ffd600; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; margin-left: 10px; vertical-align: middle; }
+    footer { background: #0d1b2a; border-top: 2px solid #1e3a2a; text-align: center; padding: 40px 20px; color: #555; font-size: 0.85rem; }
     footer span { color: #00e676; }
-
-    /* RESPONSIVE */
     @media (max-width: 600px) {
       .hero h1 { font-size: 2rem; }
       .chart-grid { grid-template-columns: 1fr; }
@@ -261,7 +70,6 @@
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <div class="logo">⚽ Football<span>Analytics</span></div>
     <ul>
@@ -271,7 +79,6 @@
     </ul>
   </nav>
 
-  <!-- HERO -->
   <div class="hero">
     <h1>Football Data,<br/><span>Beautifully Visualized</span></h1>
     <p>Explore 150+ years of international football history, player transfer values, and real-time fan sentiment.</p>
@@ -283,47 +90,36 @@
     </div>
   </div>
 
-  <!-- STATS BAR -->
   <div class="stats-bar">
-    <div class="stat-item">
-      <div class="number">44,341</div>
-      <div class="label">International Matches</div>
-    </div>
-    <div class="stat-item">
-      <div class="number">200+</div>
-      <div class="label">Nations Tracked</div>
-    </div>
-    <div class="stat-item">
-      <div class="number">18,000+</div>
-      <div class="label">Players Analysed</div>
-    </div>
-    <div class="stat-item">
-      <div class="number">145</div>
-      <div class="label">Years of Data</div>
-    </div>
+    <div class="stat-item"><div class="number">44,341</div><div class="label">International Matches</div></div>
+    <div class="stat-item"><div class="number">200+</div><div class="label">Nations Tracked</div></div>
+    <div class="stat-item"><div class="number">18,000+</div><div class="label">Players Analysed</div></div>
+    <div class="stat-item"><div class="number">145</div><div class="label">Years of Data</div></div>
   </div>
 
-  <!-- CHARTS SECTION -->
   <section id="stats">
     <div class="section-title">📊 <span>Match Statistics</span></div>
-    <div class="section-subtitle">Historical international match data — win rates, goal trends, and top nations</div>
+    <div class="section-subtitle">Historical international match data — win rates, goal trends, and top scorers</div>
     <div class="chart-grid">
+
       <div class="chart-card">
-        <div class="chart-card">
-  <h3><span class="dot"></span> Top 10 International Goalscorers</h3>
-  <canvas id="scorersChart"></canvas>
-</div>
         <h3><span class="dot"></span> Top 10 Nations by Wins</h3>
         <canvas id="winsChart"></canvas>
       </div>
+
       <div class="chart-card">
         <h3><span class="dot"></span> Goals Scored Per Decade</h3>
         <canvas id="goalsChart"></canvas>
       </div>
+
+      <div class="chart-card">
+        <h3><span class="dot"></span> Top 10 International Goalscorers</h3>
+        <canvas id="scorersChart"></canvas>
+      </div>
+
     </div>
   </section>
 
-  <!-- PLAYERS SECTION -->
   <section id="players">
     <div class="section-title">🏃 <span>Top Players</span> by Market Value</div>
     <div class="section-subtitle">Transfermarkt data — most valuable players in world football</div>
@@ -331,29 +127,23 @@
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Player</th>
-            <th>Nation</th>
-            <th>Position</th>
-            <th>Market Value</th>
-            <th>Club</th>
+            <th>#</th><th>Player</th><th>Nation</th><th>Position</th><th>Market Value</th><th>Club</th>
           </tr>
         </thead>
         <tbody>
           <tr><td>1</td><td>Kylian Mbappé</td><td><span class="flag">🇫🇷</span>France</td><td>Forward</td><td>€180M</td><td>Real Madrid</td></tr>
           <tr><td>2</td><td>Erling Haaland</td><td><span class="flag">🇳🇴</span>Norway</td><td>Forward</td><td>€170M</td><td>Man City</td></tr>
           <tr><td>3</td><td>Vinicius Jr.</td><td><span class="flag">🇧🇷</span>Brazil</td><td>Forward</td><td>€150M</td><td>Real Madrid</td></tr>
-          <tr><td>4</td><td>Jude Bellingham</td><td><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>England</td><td>Midfielder</td><td>€150M</td><td>Real Madrid</td></tr>
+          <tr><td>4</td><td>Jude Bellingham</td><td><span class="flag">🏴</span>England</td><td>Midfielder</td><td>€150M</td><td>Real Madrid</td></tr>
           <tr><td>5</td><td>Pedri</td><td><span class="flag">🇪🇸</span>Spain</td><td>Midfielder</td><td>€120M</td><td>Barcelona</td></tr>
           <tr><td>6</td><td>Lamine Yamal</td><td><span class="flag">🇪🇸</span>Spain</td><td>Forward</td><td>€120M</td><td>Barcelona</td></tr>
-          <tr><td>7</td><td>Phil Foden</td><td><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>England</td><td>Midfielder</td><td>€110M</td><td>Man City</td></tr>
-          <tr><td>8</td><td>Bukayo Saka</td><td><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>England</td><td>Winger</td><td>€110M</td><td>Arsenal</td></tr>
+          <tr><td>7</td><td>Phil Foden</td><td><span class="flag">🏴</span>England</td><td>Midfielder</td><td>€110M</td><td>Man City</td></tr>
+          <tr><td>8</td><td>Bukayo Saka</td><td><span class="flag">🏴</span>England</td><td>Winger</td><td>€110M</td><td>Arsenal</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- SENTIMENT SECTION -->
   <section id="sentiment">
     <div class="section-title">🐦 <span>Fan Sentiment</span> <span class="coming-soon">Coming Soon</span></div>
     <div class="section-subtitle">Real-time Twitter/X analysis — how fans feel about top nations right now</div>
@@ -377,7 +167,7 @@
         <div class="sentiment-label">Positive Sentiment</div>
       </div>
       <div class="sentiment-card">
-        <div class="team-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</div>
+        <div class="team-name">🏴 England</div>
         <div class="sentiment-score">68%</div>
         <div class="sentiment-bar-bg"><div class="sentiment-bar-fill" style="width:68%"></div></div>
         <div class="sentiment-label">Positive Sentiment</div>
@@ -385,138 +175,45 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <p>Built with ❤️ using <span>FIFA Historical Data</span> & <span>Transfermarkt</span> datasets</p>
     <p style="margin-top:8px;">Data sources: Kaggle • Transfermarkt • Twitter API</p>
   </footer>
 
-  <!-- CHARTS JS -->
   <script>
-    // Top 10 Nations by Wins
-    new Chart(document.getElementById('winsChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Brazil', 'Germany', 'Argentina', 'Spain', 'England', 'France', 'Italy', 'Netherlands', 'Portugal', 'Uruguay'],
-        datasets: [{
-          label: 'Total Wins',
-          data: [612, 589, 541, 498, 487, 463, 451, 398, 387, 374],
-          backgroundColor: 'rgba(0, 230, 118, 0.7)',
-          borderColor: '#00e676',
-          borderWidth: 1,
-          borderRadius: 6,
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } },
-          y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }
-        }
-      }
-    });
-
-    // Goals Per Decade
-    new Chart(document.getElementById('goalsChart'), {
-      type: 'line',
-      data: {
-        labels: ['1870s','1880s','1890s','1900s','1910s','1920s','1930s','1940s','1950s','1960s','1970s','1980s','1990s','2000s','2010s'],
-        datasets: [{
-          label: 'Goals Scored',
-          data: [120, 340, 580, 720, 810, 1240, 1580, 980, 2100, 2450, 2980, 3200, 3800, 4200, 4600],
-          borderColor: '#00e676',
-          backgroundColor: 'rgba(0,230,118,0.08)',
-          tension: 0.4,
-          fill: true,
-          pointBackgroundColor: '#00e676',
-          pointRadius: 4,
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } },
-          y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }
-        }
-      }
-    });
- 
-<script>
-    // TOP 10 NATIONS BY WINS (Real Data)
     new Chart(document.getElementById('winsChart'), {
       type: 'bar',
       data: {
         labels: ["Brazil","England","Germany","Argentina","Sweden","South Korea","Mexico","France","Italy","Hungary"],
-        datasets: [{
-          label: 'Total Wins',
-          data: [670,623,597,588,541,536,511,476,475,470],
-          backgroundColor: 'rgba(0, 230, 118, 0.7)',
-          borderColor: '#00e676',
-          borderWidth: 1,
-          borderRadius: 6,
-        }]
+        datasets: [{ label: 'Total Wins', data: [670,623,597,588,541,536,511,476,475,470],
+          backgroundColor: 'rgba(0,230,118,0.7)', borderColor: '#00e676', borderWidth: 1, borderRadius: 6 }]
       },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } },
-          y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }
-        }
-      }
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }, y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } } } }
     });
 
-    // GOALS PER DECADE (Real Data)
     new Chart(document.getElementById('goalsChart'), {
       type: 'line',
       data: {
         labels: ["1870s","1880s","1890s","1900s","1910s","1920s","1930s","1940s","1950s","1960s","1970s","1980s","1990s","2000s","2010s","2020s"],
-        datasets: [{
-          label: 'Goals Scored',
-          data: [59,307,304,573,1392,3216,4660,3619,6611,10336,12295,12697,19297,26682,26659,15911],
-          borderColor: '#00e676',
-          backgroundColor: 'rgba(0,230,118,0.08)',
-          tension: 0.4,
-          fill: true,
-          pointBackgroundColor: '#00e676',
-          pointRadius: 4,
-        }]
+        datasets: [{ label: 'Goals Scored', data: [59,307,304,573,1392,3216,4660,3619,6611,10336,12295,12697,19297,26682,26659,15911],
+          borderColor: '#00e676', backgroundColor: 'rgba(0,230,118,0.08)', tension: 0.4, fill: true, pointBackgroundColor: '#00e676', pointRadius: 4 }]
       },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } },
-          y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }
-        }
-      }
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }, y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } } } }
     });
 
-    // TOP 10 SCORERS (Real Data - New Chart!)
     new Chart(document.getElementById('scorersChart'), {
       type: 'bar',
       data: {
         labels: ["Ronaldo","H. Kane","Lewandowski","Lukaku","Messi","Dzeko","Mitrovic","L. Suarez","Ali Daei","Klose"],
-        datasets: [{
-          label: 'International Goals',
-          data: [121,69,69,64,63,58,52,51,49,48],
-          backgroundColor: 'rgba(0, 230, 118, 0.7)',
-          borderColor: '#00e676',
-          borderWidth: 1,
-          borderRadius: 6,
-        }]
+        datasets: [{ label: 'International Goals', data: [121,69,69,64,63,58,52,51,49,48],
+          backgroundColor: 'rgba(0,230,118,0.7)', borderColor: '#00e676', borderWidth: 1, borderRadius: 6 }]
       },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } },
-          y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }
-        }
-      }
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } }, y: { ticks: { color: '#aaa' }, grid: { color: '#1a2a1a' } } } }
     });
-</script>
+  </script>
+
 </body>
 </html>
